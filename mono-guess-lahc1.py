@@ -30,17 +30,13 @@ class Decipher(LateAcceptanceHillClimber):
     def move(self):
         """Swaps the characters in the key"""
 
-        initial_energy = self.energy()
-
         a = random.randint(0, len(self.state) - 1)
         b = random.randint(0, len(self.state) - 1)
 
         # swap the letters in the key
         self.state[a], self.state[b] = self.state[b], self.state[a]
 
-        new_energy = self.energy()
-
-        return new_energy - initial_energy
+        return None
 
     def energy(self):
         text = mono_decrypt(self.cipher_text, self.state)
