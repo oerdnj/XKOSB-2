@@ -25,6 +25,26 @@ Notes:
    Josefa Božka website, converted tto text with pdftotext and
    concatenated into single library file
 
+Implementation details:
+
+Monoalphabetical guessing is using the Algorithm 1 variant from the
+Jakobsen's paper[3], so the guessing is quite slow because it randomly
+walks the problem space.
+
+The scoring mechanism was changed from digrams suggested by Jakobsen
+to tetragrams from Kaeding's paper[4] to improve the accuracy of the
+paper.
+
+I've tried to implement Algorithm 2 from Jakobsen's paper for quite
+some time, but I wasn't successful in writing a working version, so
+after couple of nights I gave up.
+
+There's a python module called 'cipher_solver' that can modified with
+constants from consts.py to solve the ciphers in Czech language
+(either replace the values in the original file with Czech language
+values or use consts.py as it is and replace the constant names in the
+code).
+
 References:
 1. Helen Fouché Gaines, “Cryptanalysis: A Study of Ciphers and Their Solution.” New Dover ed. (New York: Dover Publications, Inc., 1956). https://archive.org/details/cryptanalysis00heel
 2. Dunin, E. and Schmeh K. “Codebreaking: A Practical Guide.” (San Francisco: No Starch Press, 2023).
