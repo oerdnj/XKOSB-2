@@ -5,13 +5,14 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <ctype.h>
 
 #include "monograms.h"	/* single-letter frequencies */
 #include "tetragrams.h" /* tetragram frequencies */
 #define MAXTEXTLEN   10001
 #define MAXKEYLEN    100
 #define IOCTHRESHOLD 1.52
-char alphabet[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+char alphabet[] = "abcdefghijklmnopqrstuvwxyz";
 /* the index of coincidence (IoC) for a text */
 double
 index_of_coincidence(char *text) {
@@ -114,6 +115,40 @@ copy_keys(char source[MAXKEYLEN][26], char target[MAXKEYLEN][26], int keylen) {
 			target[i][j] = source[i][j];
 	return;
 }
+
+void usage(int argc, char **argv) {
+	printf("usage: %s <ciphertext>\n", argv[0]);
+	printf("note: the ciphertext must be lowercase a-z only\n");
+	exit(1);
+}
+
+void
+normalize(char *dst, const char *src, size_t size) {
+	/* strlcpy() copy copying only A-Z and a-z and lowercasing the input */
+	char *d = dst;
+	const char *s = src;
+	size_t n = size;
+
+	/* Copy as many bytes as will fit */
+	if (n != 0U && --n != 0U) {
+		do {
+			char c = tolower(*s++);
+			if (!isalpha(c) && c != 0) {
+				continue;
+			}
+			if ((*d++ = c) == 0) {
+				break;
+			}
+		} while (--n != 0U);
+	}
+
+	if (n == 0U) {
+		if (size != 0U) {
+			*d = '\0'; /* NUL-terminate dst */
+		}
+	}
+}
+
 int
 main(int argc, char **argv) {
 	char c[MAXTEXTLEN];
@@ -149,7 +184,12 @@ main(int argc, char **argv) {
 	double maxf, maxr;
 	double reference[26];
 	double freqs[MAXKEYLEN][26]; /* monogram frequencies of slice  */
-	strcpy(c, argv[1]);
+
+	if (argc < 2) {
+		usage(argc, argv);
+	}
+
+	normalize(c, argv[1], sizeof(c));
 	length = strlen(c);
 	/* length of the ciphertext       */
 	/* have we found the period?      */
@@ -223,7 +263,7 @@ main(int argc, char **argv) {
 					copy_keys(ck, bestk, period);
 					bestf = fitc;
 					bigcount = 0;
-					strcpy(bestp, p);
+					strncpy(bestp, p, sizeof(bestp));
 				} else
 					bigcount++;
 			}
