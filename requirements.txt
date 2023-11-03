@@ -1,0 +1,4 @@
+numpy
+lahc
+simanneal
+cipher_solver

@@ -1,0 +1,8 @@
+__pycache__/
+*~
+/cs.lmdb/
+/slippery/slippery
+/cs.dict
+/library
+/library.txt
+/papers
